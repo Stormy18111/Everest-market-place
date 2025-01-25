@@ -1,0 +1,132 @@
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Buyer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Buyer's Marketplace</h1>
+
+    <div class="section" id="buyer-section">
+        <h2>Available Products</h2>
+
+        <!-- Search and Sort -->
+        <div class="search-sort">
+            <input type="text" id="search-bar" placeholder="Search for products..." oninput="searchProducts()">
+            <select id="sort-products" onchange="sortProducts()">
+                <option value="default">Sort By</option>
+                <option value="price">Price</option>
+                <option value="rating">Rating</option>
+            </select>
+        </div>
+
+        <label for="buyer-category">Choose a category:</label>
+        <select id="buyer-category" name="buyer-category" onchange="filterProducts()">
+            <option value="all">All</option>
+            <option value="furniture">Furniture</option>
+            <option value="electronics">Electronics</option>
+        </select><br><br>
+
+        <div id="products"></div>
+
+        <!-- Cart -->
+        <div class="cart" onclick="viewCart()">Cart (0)</div>
+        <div id="cart-items" style="display: none;"></div>
+    </div>
+
+    <script>
+        let cart = [];
+        let productsList = [];
+
+        // Function to display products (You can replace with actual product data)
+        function displayProducts() {
+            const productsDiv = document.getElementById('products');
+            productsDiv.innerHTML = ''; // Clear existing products
+
+            productsList.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.setAttribute('data-category', product.category);
+                productDiv.setAttribute('data-price', product.price);
+                productDiv.setAttribute('data-rating', product.rating);
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="Product Image" width="100"><br>
+                    <div class="product-info">
+                        <span>Price: $${product.price}</span><br>
+                        <span>Category: ${product.category}</span><br>
+                        <span>Rating: ${product.rating}</span><br>
+                        <a href="${product.binanceUrl}" target="_blank">Pay with Binance</a><br>
+                        <button onclick="addToCart(${product.id})">Buy</button>
+                    </div>
+                `;
+                productsDiv.appendChild(productDiv);
+            });
+        }
+
+        // Function to add product to the cart
+        function addToCart(productId) {
+            const product = productsList.find(p => p.id === productId);
+            cart.push(product);
+            alert(`${product.name} has been added to your cart.`);
+        }
+
+        // Function to filter products by category
+        function filterProducts() {
+            const category = document.getElementById('buyer-category').value;
+            const products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                if (category === 'all' || product.getAttribute('data-category') === category) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        // Function to search products
+        function searchProducts() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                const name = product.querySelector('span').textContent.toLowerCase();
+                if (name.includes(query)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        // Function to sort products
+        function sortProducts() {
+            const sortBy = document.getElementById('sort-products').value;
+            const productsDiv = document.getElementById('products');
+            const products = Array.from(productsDiv.getElementsByClassName('product'));
+            
+            if (sortBy === 'price') {
+                products.sort((a, b) => parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price')));
+            } else if (sortBy === 'rating') {
+                products.sort((a, b) => parseFloat(a.getAttribute('data-rating')) - parseFloat(b.getAttribute('data-rating')));
+            }
+
+            productsDiv.innerHTML = '';
+            products.forEach(product => productsDiv.appendChild(product));
+        }
+
+        // Function to view cart
+        function viewCart() {
+            alert(`You have ${cart.length} item(s) in your cart.`);
+        }
+
+        // Load some sample products
+        productsList = [
+            { id: 1, name: 'Product 1', image: 'product1.jpg', price: 100, category: 'furniture', rating: 4, binanceUrl: 'https://binance.com/product1' },
+            { id: 2, name: 'Product 2', image: 'product2.jpg', price: 200, category: 'electronics', rating: 5, binanceUrl: 'https://binance.com/product2' },
+        ];
+
+        displayProducts();
+    </script>
+</body>
+</html>

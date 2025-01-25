@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Seller's Dashboard</h1>
+
+    <div class="section" id="seller-section">
+        <h2>Upload Product</h2>
+        <form id="seller-form">
+            <label for="product-images">Upload Product Images:</label>
+            <input type="file" id="product-images" name="product-images" accept="image/*" multiple><br><br>
+
+            <label for="product-price">Product Price:</label>
+            <input type="number" id="product-price" name="product-price"><br><br>
+
+            <label for="product-category">Product Category:</label>
+            <select id="product-category" name="product-category">
+                <option value="furniture">Furniture</option>
+                <option value="electronics">Electronics</option>
+            </select><br><br>
+
+            <label for="binance-url">Binance Address URL:</label>
+            <input type="url" id="binance-url" name="binance-url"><br><br>
+
+            <button type="button" onclick="uploadProducts()">Upload Products</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to handle product uploads
+        function uploadProducts() {
+            const imageInput = document.getElementById('product-images');
+            const priceInput = document.getElementById('product-price');
+            const categoryInput = document.getElementById('product-category');
+            const binanceInput = document.getElementById('binance-url');
+            const productsDiv = document.getElementById('products');
+
+            if (imageInput.files.length === 0 || !priceInput.value || !categoryInput.value || !binanceInput.value) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            Array.from(imageInput.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Code to add the uploaded product to the database or product list
+                    alert('Product uploaded successfully!');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+</body>
+</html>
